@@ -4,7 +4,7 @@ import './FetchData.css'
 
 const FetchData = () => {
   const apiKey = import.meta.env.VITE_OANDA_API_KEY
-  const baseUrl = 'https://web-services.oanda.com/rates/api/v2'
+  const baseUrl = 'https://exchange-rates-api.oanda.com/v2'
 
   // Fetch available currencies
   const { data: currencies, loading: currenciesLoading, error: currenciesError } = UseFetch(
@@ -36,15 +36,15 @@ const FetchData = () => {
           <h2>Available Currencies</h2>
           {currenciesLoading && <p>Loading currencies...</p>}
           {currenciesError && <p className='error'>Error: {currenciesError}</p>}
-          {currencies && (
+          {currencies && currencies.currencies && Array.isArray(currencies.currencies) && (
             <div className='currencies-grid'>
-              {Object.entries(currencies.currencies).slice(0, 10).map(([code, name]) => (
-                <div key={code} className='currency-item'>
-                  <strong>{code}</strong>: {name}
+              {currencies.currencies.slice(0, 10).map((currency) => (
+                <div key={currency.code} className='currency-item'>
+                  <strong>{currency.code}</strong>: {currency.description}
                 </div>
               ))}
-              {Object.keys(currencies.currencies).length > 10 && (
-                <p className='note'>Showing 10 of {Object.keys(currencies.currencies).length} currencies</p>
+              {currencies.currencies.length > 10 && (
+                <p className='note'>Showing 10 of {currencies.currencies.length} currencies</p>
               )}
             </div>
           )}
@@ -55,19 +55,21 @@ const FetchData = () => {
           <h2>Current Exchange Rates (Base: USD)</h2>
           {ratesLoading && <p>Loading rates...</p>}
           {ratesError && <p className='error'>Error: {ratesError}</p>}
-          {rates && rates.quotes && (
+          {rates && rates.quotes && Array.isArray(rates.quotes) && (
             <div className='rates-container'>
-              <p className='timestamp'>Last updated: {new Date(rates.meta.effective_params.date).toLocaleString()}</p>
+              {rates.meta && rates.meta.effective_params && (
+                <p className='timestamp'>Last updated: {new Date(rates.meta.effective_params.date).toLocaleString()}</p>
+              )}
               <ul className='rates-list'>
-                {Object.entries(rates.quotes).slice(0, 20).map(([currency, rate]) => (
-                  <li key={currency} className='rate-item'>
-                    <span className='currency-code'>USD → {currency}</span>
-                    <span className='rate-value'>{rate.mid_point.toFixed(4)}</span>
+                {rates.quotes.slice(0, 20).map((quote) => (
+                  <li key={quote.quote_currency} className='rate-item'>
+                    <span className='currency-code'>{rates.base_currency} → {quote.quote_currency}</span>
+                    <span className='rate-value'>{quote.mid_point.toFixed(4)}</span>
                   </li>
                 ))}
               </ul>
-              {Object.keys(rates.quotes).length > 20 && (
-                <p className='note'>Showing 20 of {Object.keys(rates.quotes).length} exchange rates</p>
+              {rates.quotes.length > 20 && (
+                <p className='note'>Showing 20 of {rates.quotes.length} exchange rates</p>
               )}
             </div>
           )}

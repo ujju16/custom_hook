@@ -71,11 +71,11 @@ const FetchDataWithClient = () => {
         {/* Currencies Section */}
         <section>
           <h2>Available Currencies</h2>
-          {currencies && currencies.currencies && (
+          {currencies && currencies.currencies && Array.isArray(currencies.currencies) && (
             <div className='currencies-grid'>
               {currencies.currencies.slice(0, 10).map((currency) => (
                 <div key={currency.code} className='currency-item'>
-                  <strong>{currency.code}</strong>: {currency.name}
+                  <strong>{currency.code}</strong>: {currency.description}
                 </div>
               ))}
               {currencies.currencies.length > 10 && (
@@ -88,7 +88,7 @@ const FetchDataWithClient = () => {
         {/* Exchange Rates Section */}
         <section>
           <h2>Current Exchange Rates (Base: USD)</h2>
-          {rates && rates.quotes && (
+          {rates && rates.quotes && Array.isArray(rates.quotes) && (
             <div className='rates-container'>
               {rates.meta && rates.meta.effective_params && (
                 <p className='timestamp'>
