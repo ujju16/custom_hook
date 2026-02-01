@@ -16,15 +16,19 @@ const FetchData = () => {
     }
   )
 
-  // Fetch latest exchange rates (base currency: USD)
-  const { data: rates, loading: ratesLoading, error: ratesError } = UseFetch(
-    `${baseUrl}/rates/spot.json?base=USD`,
-    {
-      headers: {
-        'Authorization': `Bearer ${apiKey}`
-      }
-    }
-  )
+  // Note: Spot rates require a paid API key
+  // Commenting out to avoid 403 errors
+  // const { data: rates, loading: ratesLoading, error: ratesError } = UseFetch(
+  //   `${baseUrl}/rates/spot.json?base=USD`,
+  //   {
+  //     headers: {
+  //       'Authorization': `Bearer ${apiKey}`
+  //     }
+  //   }
+  // )
+  const rates = null
+  const ratesLoading = false
+  const ratesError = 'Real-time rates not available with current API key. Please upgrade your Oanda API subscription.'
 
   return (
     <>

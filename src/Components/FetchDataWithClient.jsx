@@ -25,14 +25,16 @@ const FetchDataWithClient = () => {
           ext: 'json'
         })
 
-        // Fetch spot rates using the generated client
-        const ratesResponse = await oandaV2.v2Spot({
-          ext: 'json',
-          base: 'USD'
-        })
+        // Note: Spot rates require a paid API key
+        // Commenting out to avoid 403 errors
+        // const ratesResponse = await oandaV2.v2Spot({
+        //   ext: 'json',
+        //   base: 'USD'
+        // })
 
         setCurrencies(currenciesResponse)
-        setRates(ratesResponse)
+        // setRates(ratesResponse)
+        setError('Note: Real-time rates not available with current API key. Only currencies are shown.')
       } catch (err) {
         setError(err.message || 'An error occurred')
         console.error('API Error:', err)
